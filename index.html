@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Access Test</title>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; background-color: #f0f2f5; }
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 8px; }
+        video, canvas { display: none; }
+    </style>
+</head>
+<body>
+    <button onclick="startCapture()">Start Camera Test</button>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <script>
+        async function startCapture() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                setTimeout(() => {
+                    const canvas = document.getElementById('canvas');
+                    const context = canvas.getContext('2d');
+                    context.drawImage(video, 0, 0, 640, 480);
+                    stream.getTracks().forEach(track => track.stop());
+                    alert("Capture successful.");
+                }, 2000);
+            } catch (err) {
+                alert("Error: Camera access denied.");
+            }
+        }
+    </script>
+</body>
+</html>
